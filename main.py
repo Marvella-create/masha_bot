@@ -44,7 +44,7 @@ def get_vocabulary(text):
 
 async def send_daily_digest():
     # sends morning greeting + one post per category
-
+    pass
 @dp.message(Command("start", "digest"))
 async def manual_digest(message: types.Message):
     if message.from_user.id == MY_ID:
