@@ -9,20 +9,21 @@ from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-# --- НАСТРОЙКИ ---
-API_TOKEN = os.environ.get("NEWS_BOT_TOKEN", "")
-MY_ID = int(os.environ.get("MY_TELEGRAM_ID", "0"))
+API_TOKEN = "8705880761:AAF6w9OYwB0ZhfdcKggpXp21Bo9CmwMn6w0"
+MY_ID = 133724864
+
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher()
+scheduler = AsyncIOScheduler()
 
 SOURCES = {
-    "Кино 🎬": "https://www.digitalspy.com/rss/all/movies.xml",
+    "Movies 🎬": "https://www.digitalspy.com/rss/all/movies.xml",
     "IT/Tech 💻": "https://www.theverge.com/rss/index.xml",
-    "Образование 📚": "http://feeds.bbci.co.uk/news/education/rss.xml",
+    "Education 📚": "http://feeds.bbci.co.uk/news/education/rss.xml",
     "Travel ✈️": "https://www.independent.co.uk/travel/rss",
     "Food 🍕": "https://www.delish.com/rss/all.xml",
     "Health & Sport 💪": "http://rss.cnn.com/rss/cnn_health.rss"
 }
-
-...
 
 def clean_html(raw_html):
     if not raw_html: return ""
@@ -43,14 +44,19 @@ def get_vocabulary(text):
     return list(set(filtered))[:3]
 
 async def send_daily_digest():
-    # sends morning greeting + one post per category
-    pass
+    print("Executing daily digest...")
+    await bot.send_message(MY_ID, "Bot is online and ready.")
+
 @dp.message(Command("start", "digest"))
 async def manual_digest(message: types.Message):
     if message.from_user.id == MY_ID:
         await send_daily_digest()
 
 async def main():
+    print("BOT STARTED")
     scheduler.add_job(send_daily_digest, 'cron', hour=11, minute=0)
     scheduler.start()
     await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
