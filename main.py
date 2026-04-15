@@ -7,10 +7,13 @@ import feedparser
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- CONFIG ---
-API_TOKEN = "8705880761:AAF6w9OYwB0ZhfdcKggpXp21Bo9CmwMn6w0"
-MY_ID = 133724864
+API_TOKEN = os.getenv("API_TOKEN")
+MY_ID = int(os.getenv("MY_ID", "133724864")) 
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
@@ -78,7 +81,7 @@ async def manual_digest(message: types.Message):
         await send_daily_digest()
 
 async def main():
-    print("BOT STARTED WITH FULL LOGIC")
+    print("BOT STARTED WITH SAFE CONFIG")
     # Schedule for 11:00 AM
     scheduler.add_job(send_daily_digest, 'cron', hour=11, minute=0)
     scheduler.start()
